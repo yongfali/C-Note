@@ -1,0 +1,6 @@
+# ignore C++
+*.exe
+*.o
+*.cpp~
+*.LIB
+
