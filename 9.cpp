@@ -47,6 +47,9 @@ public:
 		return this->length * this->width * this->height;
 	} 
 	
+	//成员版运算符重载参数会少一个，因为其中一个操作数
+	//是被隐式的传递的调用对象
+	//非成员函数的申明为友元函数（friend)
 	Box operator+(const Box& box){
 		Box box1;
 		box1.length = this->length + box.length;
