@@ -74,6 +74,13 @@ int main(int argc, const char * arrv[]){
 	// auto_ptr<string> p3 (new string("auto"));
 	// auto_ptr<string> p4;
 	// p4 = p3;
+	
+	// forench 循环的使用，简化循环的代码
+	int arr[] = {1, 3, 4, 5, 6, 7};
+	for (int temp : arr)
+	{
+		cout << temp << endl;
+	}
 
 	return 0;
 
