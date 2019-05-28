@@ -2,6 +2,7 @@
 #include <string>
 #include <fstream>
 #include <memory> //智能指针头文件
+#include <vector>
 
 using namespace std;
 
@@ -82,6 +83,22 @@ int main(int argc, const char * arrv[]){
 		cout << temp << endl;
 	}
 
+	//常用的迭代器有输入/输出/正向/双向/随机访问迭代器五种，他们的功能
+	//逐层增加，这里的输入迭代器针对的是从容器读取数据的，输出针对的是
+	//向容器写入数据。
+	
+	//容器的复制算法
+	cout << "容器的复制算法copy()" << endl; 
+	vector<int> copyArr(6);
+
+	copy(arr, arr + 6, copyArr.begin()); //参数依次表示为复制的起始位置，结束位置，和第一个元素复制到新数组的位置。
+
+	for(auto temp : copyArr){
+		cout << "copy array: " << temp << endl;
+	}
+
+	//容器的常概念
+	
 	return 0;
 
 }
