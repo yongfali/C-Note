@@ -50,7 +50,7 @@
 
 ### 条款10：令operator= 返回一个reference to *this
 * 返回引用主要是为了能够进行连续赋值 
-> ```c++ 
+> ```c
 class widget{
 public:
 	...
