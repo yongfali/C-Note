@@ -42,8 +42,21 @@
 * <strong> 虚基表继承的实例见：virtual_function.cpp</sstrong>
 
 ### 条款08 别让异常逃离析构函数
+* 如果一个被析构函数调用的函数排除异常，析构函数应该捕捉任何异常，然后吞下他们或结束程序
+* 如果需要对操作函数运行期抛出的异常做出反应，那么class应该提供一个普通函数（而非在析构函数中）执行该操作
+
+### 条款09：绝不在构造和析构过程中调用virtual函数
 * 
 
-
-
-
+### 条款10：令operator= 返回一个reference to *this
+* 返回引用主要是为了能够进行连续赋值 
+> <code> class widget{
+	public:
+		...
+		Widget & operator=(const Widget & rhs){
+			...
+			return *this;
+		}
+		...
+};
+</code>
