@@ -50,13 +50,14 @@
 
 ### 条款10：令operator= 返回一个reference to *this
 * 返回引用主要是为了能够进行连续赋值 
-> <code> class widget{
-	public:
+> ```c++ 
+class widget{
+public:
+	...
+	Widget & operator=(const Widget & rhs){
 		...
-		Widget & operator=(const Widget & rhs){
-			...
-			return *this;
-		}
-		...
+		return *this;
+	}
+	...
 };
-</code>
+```
