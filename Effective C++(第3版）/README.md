@@ -39,7 +39,7 @@
 
 ### 条款07： 为多态基类声明virtual析构函数
 * 多态性质的基类应该声明一个带有virtual的析构函数，如果该类不是用来做多态基类，则不声明virtual析构函数，因为声明一个virtua会增加一个指针大小的空间开销，会对应一个指向虚基表（vpt)的指针、
-* <strong> 虚基表继承的实例见virtual_function.cpp</sstrong>
+* <strong> 虚基表继承的实例见：virtual_function.cpp</sstrong>
 
 ### 条款08 别让异常逃离析构函数
 * 
