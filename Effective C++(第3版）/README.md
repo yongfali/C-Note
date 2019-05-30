@@ -29,6 +29,21 @@
 * 为免除跨编译单元之初始化问题，一般用local static 对象替换non-local static对象
 
 ### 条款05 了解C++默认编写并调用哪些函数
+* 对于任何一个类都有一个默认的构造函数、析构函数、拷贝构造函数和赋值重载函数，由编译器提供
+* 如果不希望编译器生成默认的构造函数或赋值重载函数则可以自定义重载或者显示申明"=delete"
+> 1. class_name(const class_name & obj) = delete
+> 2. class_name operator=(const class_nam & obj) = delete
+
+### 条款06：若不想使用编译器自动生成的函数，就该明确拒绝
+* 可以将默认生成的函数在private中进行声明，并且不提供具体的实现便可以阻止
+
+### 条款07： 为多态基类声明virtual析构函数
+* 多态性质的基类应该声明一个带有virtual的析构函数，如果该类不是用来做多态基类，则不声明virtual析构函数，因为声明一个virtua会增加一个指针大小的空间开销，会对应一个指向虚基表（vpt)的指针、
+* <strong> 虚基表继承的实例见virtual_function.cpp</sstrong>
+
+### 条款08 别让异常逃离析构函数
 * 
+
+
 
 
