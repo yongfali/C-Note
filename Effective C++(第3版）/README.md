@@ -18,8 +18,11 @@
 ### 条款03：尽可能使用const
 *const指向哪里，其限定的就是哪（const 可以作用于域内的对象，函数参数，函数返回类型，成员函数本体），比如以下四个例子：
 > 1: const char * p = value || char const * p = value; // non-const pointer, const data 
+
 > 2: char * const p = value; // const pointer, non-const data
+
 > 3: const char * const p = value; // const pointer, const data
+
 > 4: char * p = value; // non-const pointer, non-const data 
 
 ### 条款04：确定对象被使用前已被初始化
