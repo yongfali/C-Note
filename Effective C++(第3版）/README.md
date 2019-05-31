@@ -168,7 +168,7 @@ for(int i = 0; i < n; ++i){
 > 2. 函数式风格的转换：int(a)
 
 * C++定义了四种新的显示类型风格的转换
-> 1. static_cast<T>(expression) // 很像 C 语言中的旧式类型转换。它能进行基础类型之间的转换，也能将带有可被单参调用的构造函数或用户自定义类型转换操作符的类型转换，还能在存有继承关系的类之间进行转换（即可将基类转换为子类，也可将子类转换为基类），还能将 non-const对象转换为 const对象（注意：反之则不行，那是const_cast的职责。）
+> 1. static_cast<T>(expression) // 很像 C 语言中的旧式类型转换。它能进行基础类型之间的转换，也能将带有可被单参调用的构造函数或用户自定义类型转换操作符的类型转换，还能在存有继承关系的类之间进行转换（即可将基类转换为子类，也可将子类转换为基类），还能将 non-const对象转换为 const对象（注意：反之则不行，那是const_cast的职责）
 ```c++
 double d = 3.14159265;
 int i = static_cast<int>(d);
@@ -186,7 +186,7 @@ class CDerived: public CBase {};
 CBase * a = new CBase;
 CDerived * b = static_cast<CDerived *>(a);
 ```
-> 2. dynamic_cast<T>(expression) // dynamic_cast 主要用来在继承体系中的安全向下转型。它能安全地将指向基类的指针转型为指向子类的指针或引用，并获知转型动作成功是否。如果转型失败会返回null（转型对象为指针时）或抛出异常（转型对象为引用时）。dynamic_cast 会动用运行时信息（RTTI）来进行类型安全检查，因此 dynamic_cast 存在一定的效率损失。（我曾见过属于优化代码80/20法则中的20那一部分的一段游戏代码，起初使用的是 dynamic_cast，后来被换成 static_cast 以提升效率，当然这仅是权宜之策，并非好的设计。）
+> 2. dynamic_cast<T>(expression) // dynamic_cast 主要用来在继承体系中的安全向下转型。它能安全地将指向基类的指针转型为指向子类的指针或引用，并获知转型动作成功是否。如果转型失败会返回null（转型对象为指针时）或抛出异常（转型对象为引用时）。dynamic_cast 会动用运行时信息（RTTI）来进行类型安全检查，因此 dynamic_cast 存在一定的效率损失。（我曾见过属于优化代码80/20法则中的20那一部分的一段游戏代码，起初使用的是 dynamic_cast，后来被换成 static_cast 以提升效率，当然这仅是权宜之策，并非好的设计）
 ```c++
 class CBase { };
 class CDerived: public CBase { };
@@ -197,7 +197,7 @@ CDerived* pd;
 pb = dynamic_cast<CBase*>(&d);     // ok: derived-to-base
 pd = dynamic_cast<CDerived*>(&b);  // error: base-to-derived
 ```
-> 3. const_cast<T>(expression) // const_cast 可去除对象的常量性（const），它还可以去除对象的易变性（volatile）。const_cast 的唯一职责就在于此，若将 const_cast 用于其他转型将会报错。
+> 3. const_cast<T>(expression) // const_cast 可去除对象的常量性（const），它还可以去除对象的易变性（volatile）。const_cast 的唯一职责就在于此，若将 const_cast 用于其他转型将会报错
 ```c++
 void print (char * str)
 {
@@ -210,6 +210,12 @@ int main ()
 	return 0;
 }
 ```
-> 4. reinterpret<T>(expression) // reinterpret_cast 用来执行低级转型，如将执行一个 int 的指针强转为 int。其转换结果与编译平台息息相关，不具有可移植性，因此在一般的代码中不常见到它。reinterpret_cast 常用的一个用途是转换函数指针类型，即可以将一种类型的函数指针转换为另一种类型的函数指针，但这种转换可能会导致不正确的结果。总之，reinterpret_cast 只用于底层代码，一般我们都用不到它，如果你的代码中使用到这种转型，务必明白自己在干什么。
+> 4. reinterpret<T>(expression) // reinterpret_cast 用来执行低级转型，如将执行一个 int 的指针强转为 int。其转换结果与编译平台息息相关，不具有可移植性，因此在一般的代码中不常见到它。reinterpret_cast 常用的一个用途是转换函数指针类型，即可以将一种类型的函数指针转换为另一种类型的函数指针，但这种转换可能会导致不正确的结果。总之，reinterpret_cast 只用于底层代码，一般我们都用不到它，如果你的代码中使用到这种转型，务必明白自己在干什么
 
-* <strong>typeid</strong> 定义在标准头文件```<typeinfo>```中，用于获取表达式的类型，它返回一个数据类型或类名字的字符串。当 typeid 用于自定义类型时，它使用 RTTI 信息来获取对象的动态类型。基于 typeid，我们可以构建出比较对象（动态）类型的操作。
+* <strong>typeid</strong> 定义在标准头文件```<typeinfo>```中，用于获取表达式的类型，它返回一个数据类型或类名字的字符串。当 typeid 用于自定义类型时，它使用 RTTI 信息来获取对象的动态类型。基于 typeid，我们可以构建出比较对象（动态）类型的操作
+
+
+### 条款28：避免返回handles指向对象内部部分
+* 主要是为了防止破坏数据的封装性，帮助const成员函数的行为更像一个const
+
+### 条款29：
