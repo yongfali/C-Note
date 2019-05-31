@@ -1,6 +1,8 @@
 ## Effective C++ (第3版)学习笔记
 
 ## 说明： 本书主要是为了如何高效的运用C++，并编写属于自己的项目，使其具有易管理、可移植、可扩充等特征。
+## 第一章：自己习惯C++
+
 ### 条款01：视C++为一个语言联邦
 * C++ 可以理解为由以下四部分组成
 > 1. C语言
@@ -27,6 +29,8 @@
 * 对象初始化和对象赋值不是同一个概念，构造函数体内的操作是赋值，而用initialization list 则是初始化操作
 * 对象初始化的效率要比独享赋值的效率高，因为赋值一般会创建一个临时对象，进行拷贝，然后销毁临时对象
 * 为免除跨编译单元之初始化问题，一般用local static 对象替换non-local static对象
+
+## 第二章： 构造，析构，赋值
 
 ### 条款05 了解C++默认编写并调用哪些函数
 * 对于任何一个类都有一个默认的构造函数、析构函数、拷贝构造函数和赋值重载函数，由编译器提供
@@ -70,9 +74,46 @@ public:
 ### 条款12：复制对象时勿忘其每一个成分
 * 若自己重载了默认的考诶构造函数和赋值运算符，那么需要对数据的每一部分进行复制，在继承时也一样，因为自己定以后会屏蔽掉默认的方法，编译器对于这种业务逻辑的错误，不会报错
 
-### 条款13：以对象管理资源
+## 第三章：资源管理
+
+### 条款13、14、15：资源管理
 * 资源的获取在构造函数中完成，释放在析构函数中完成
 * 直接把申请资源的对象放到对象中管理，能有效防止内存泄漏的风险，如使用智能指针
 
-### 条款14：在资源管理类中心小心copying行为
-* 
+### 条款16：成对使用new和delete时要采用相同的形式
+* new 动态申请内存，是通过重载operator new函数，然后调用的malloc()函数
+* delete 释放内存，也是通过重载 operator delete函数，然后底层通过调用free()函数
+* new 和 delete 搭配， new[] 和 delete[]搭配使用
+
+### 条款17：以独立语句将newed对象置入智能指针
+* 以独立语句将newed对象存储于智能指针内，如果不这样做，一旦异常抛出，有可能导致难以察觉的资源泄漏问题
+
+## 第四章：设计与声明
+
+### 条款20：宁以pass-by-reference-to-const 替换 pass-by-value
+* 值传递会导致副本的产生，导致多次调用拷贝构造函数和析构函数，从而增大时间可空间成本
+```c++
+class Person{
+public:
+	Person();
+	virtual ~Person();
+	...
+private:
+	string name;
+	string address;
+};
+
+class Student : public Person{
+public:
+	Student();
+	~Student();
+private:
+	sting schoolName;
+	string schoolAddress;	
+};
+bool validateStudent(Student s); //函数以值传递的方式接受一个学生对象
+Student plato;
+bool platoIsOK = validateStudent(plato);//该调用一共会调用6次构造函数和6次析构函数
+//student 构造函数一次，Student 两个string对象各一次拷贝构造，然后分别各对应一次析构函数
+//Student继承了Person，Person构造一次，和其两个string对象各一次拷贝构造，然后分别各一次析构
+```
