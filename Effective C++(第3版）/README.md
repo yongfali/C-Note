@@ -117,3 +117,26 @@ bool platoIsOK = validateStudent(plato);//该调用一共会调用6次构造函�
 //student 构造函数一次，Student 两个string对象各一次拷贝构造，然后分别各对应一次析构函数
 //Student继承了Person，Person构造一次，和其两个string对象各一次拷贝构造，然后分别各一次析构
 ```
+* 若上述代码改为传递引用则没有任何的构造函数和析构函数被调用
+```c++
+bool validataStudent(const Student & s); // pass-by-references
+```
+* pass-by-value也并不是一无是处，语言本身内置的类型和STL容器的迭代器和函数对象，一般采用值传递因为引用传递的本质还是指针的传递，而底层的实现对值的处理要比指针的处理效率更高
+
+### 条款21：当必须返回对象时，不要试图返回他的引用
+* 引用实际上是现有某一个对象的别名
+* 并不是所有的返回值都是引用才好，有时根据实际需要返回值才是必须的，虽然会牺牲一些时间和空间成本但也是值得的，相比于获得错误的结果要好
+* 绝不要返回pointer或reference指向一个local stack对象或返回reference指向一个head-allocated对象，或返回pointer或reference指向一个local static对象而有可能同时需要多个这样的对象。
+
+### 条款22：将成员变量声明为private
+* 该操作将赋予客户访问数据的一致性、课细微划分访问空中、允诺约束条件获得保证，并提供class实现者更充分的弹性
+* protected 并不比public更具有封装性
+
+### 条款23、24：宁以non-member、non-friend替换member函数
+* 面向对象指的是对数据的封装性，并不是基于方法的封装性，有时非成员函数比成员函数的所带来的封装性更好
+* 对于封装，越多的东西被封装，就可以留给开发人员更多的操作空间，而给客户带来更低的影响
+* friend函数对class private成员的访问权利和member函数相同，因此两者的封装性差不多
+
+### 条款25：考虑写出一个不抛出异常的swap函数
+*  
+
