@@ -240,5 +240,41 @@ int main ()
 ## 第六章：继承与面向对象设计
 
 ### 条款32：确定你的public继承模式是"is-a"关系
-* 
+* public继承意味'is-a'，适用于base classes 身上的每一件事情也一定适用于derived classes身上，因为每一个derived class对象也都是一个base class对象
 
+### 条款33：避免遮掩继承而来的名称
+* 编译时多态一般是在某一个类内实行的，尽量避免派生类还去重载基类的函数这种做法不可取，但是对于虚函数或纯虚函数则需要重写以实现运行时多态，可以通过指向父类的指针或引用调用子类的方法
+
+### 条款34、35：区分接口继承和实现继承
+* 声明一个纯虚函数的目的是为了让派生类只继承函数的接口（子类必须实现父类的接口）
+* 声明一个非纯虚函数的目的，是让派生类继承该函数的接口和缺省实现（子类可重写该实现也可不实现）
+* 非虚函数具体制定接口继承以及强制性实现继承
+
+### 条款36：绝不定义继承而来的non-virtual函数
+* 一般不在子类去重载父类的non-virtual函数，因为它是静态绑定的，是在定义时就绑定到对应的类了，这样会导致语义理解出错
+* 子类会继承父类的所有方法和要实现的接口，因此不建议去定义继承而来的non-virtual函数
+
+条款37：绝不重新定义继承而来的缺省参数值
+* 因为缺省的参数值都是静态绑定的，而virtual函数，重写则属于是动态绑定，因此重写时必须保持函数前后的一致性
+* 如果想改变默认的缺省值，则可以通过将虚函数定义为private，然后通过public non-virtual 函数调用便可
+```c++
+class Shape{
+public:
+	enum ShapeColor {Red, Green, Blue};
+	void draw(ShapeColor color = Red) const
+	{
+		doDraw(color);
+	}
+	...
+private:
+	virtual void doDraw(ShapeColor color) const = 0;
+};
+
+class Rectangle : public Shape{
+public:
+	...
+private:
+	virtual void doDram(ShapeColor color) const;
+};
+```
+### 条款38：
