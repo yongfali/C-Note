@@ -280,7 +280,7 @@ private:
 ### 条款38：通过复合塑模出has-a
 * 复合是类型之间的一种关系，当某种对象内含其它种类的类型对象，便是这种关系
 
-### 条款39：明智而审慎地使用private继承和多重继承
+### 条款39、40：明智而审慎地使用private继承和多重继承
 * 多继承容易导致歧义的出现，当继承的多个父类有同名的方法时，容易导致子类的对象在调用该方法时出现歧义
 * 解决多重继承体系歧义的方法
 > 1. 明确指定其调用的方法属于哪一个类
@@ -288,3 +288,47 @@ private:
 * 但是virtual继承会增加大小、速度、初始化（及赋值）复杂度等成本
 
 ## 第七章 模板与泛型编程
+
+### 条款41：了解隐式接口和编译期多态
+* 类和模板都支持接口和多态
+* 对类而言接口是显式的，以函数签名为中心，多态则是通过virtual函数发生于运行期间
+* 对template参数而言，接口是隐式的，奠基于有效表达式。多态则是通过template具现化和桉树重载解析发生于编译期
+
+### 条款42：了解typename的双重意义
+* 声明template参数时，前缀关键字class和typename可互换
+* 请使用关键字typename标识嵌套从属类型名称；但不得在基类列或成员初始值内以它作为基类修饰符
+
+### 条款43-48：暂时没细看
+
+## 第八章 定制new和delete
+### 条款49：了解new-handler的行为
+* se_new_handler 允许客户指定一个函数，在内存分配无法获得满足时被调用
+* Nothrow new 是一个颇为局侠的工具，因为他只适用于内存的分配；后继的构造函数调用还是可能抛出异常
+
+### 条款50：了解new和delete的合理替换时机
+* 一般情况下默认的operator new operator delete基本就够了但是有时为了改善性能、对heap运用错误进行调试、收集heap使用信息，便需要对其进行自定义以满足需求
+
+### 条款51：编写new和delete时需要固守常规
+* operator  new的返回值，当成功时返回的是一个指向申请成功的内存地址指针，失败则返回bad_alloc异常
+* 这里的失败是建立在operator new多次尝试的基础上然后new-handing函数返回的是null指针时才抛出bad_alloc异常，因为内存申请每次失败后会调用new-handing函数，该函数将执行某些内存释放的动作用于新申请的内存要求
+```c++
+//operator new 伪代码
+void* operator new(std::sizt_t size) throw(std::bad_alloc){
+	using namespace std;
+	if(size == 0){ //处理0-byte申请
+		size = 1;  //将它视为1-byte申请
+	}
+	while(true){
+		尝试分配size bytes;
+		if(分配成功)
+			return (指向分配成功内存区域的指针);
+
+		//分配失败，找出目前的new-handing函数
+		new_handler globalHandler = set_new_handler(0);
+		set_new_handler(globalHandler);
+
+		if(globalHandler) (*globalHandler)();
+		else throw(std::bad_alloc());
+	}
+}
+```
