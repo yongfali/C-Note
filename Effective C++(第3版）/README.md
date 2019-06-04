@@ -308,7 +308,7 @@ private:
 ### 条款50：了解new和delete的合理替换时机
 * 一般情况下默认的operator new operator delete基本就够了但是有时为了改善性能、对heap运用错误进行调试、收集heap使用信息，便需要对其进行自定义以满足需求
 
-### 条款51：编写new和delete时需要固守常规
+### 条款51、52：编写new和delete时需要固守常规
 * operator  new的返回值，当成功时返回的是一个指向申请成功的内存地址指针，失败则返回bad_alloc异常
 * 这里的失败是建立在operator new多次尝试的基础上然后new-handing函数返回的是null指针时才抛出bad_alloc异常，因为内存申请每次失败后会调用new-handing函数，该函数将执行某些内存释放的动作用于新申请的内存要求
 ```c++
@@ -318,7 +318,7 @@ void* operator new(std::sizt_t size) throw(std::bad_alloc){
 	if(size == 0){ //处理0-byte申请
 		size = 1;  //将它视为1-byte申请
 	}
-	while(true){
+	while(true){ // operator new 内含的无穷循环
 		尝试分配size bytes;
 		if(分配成功)
 			return (指向分配成功内存区域的指针);
@@ -331,4 +331,28 @@ void* operator new(std::sizt_t size) throw(std::bad_alloc){
 		else throw(std::bad_alloc());
 	}
 }
+
+// opreator delete 声明
+void operator delete(void * rawMemory) throw(); //global作用域中的正常签名式
+void operator delete(void* rawMemory, std::size_t size) throw();//class作用域中典型的签名式
 ```
+* Write palcement delete if you write palcement new
+
+## 第九章 杂项讨论
+
+### 条款53：不要轻易忽视编译器的警告
+* 不要过分看重编译器的警告信息，也不可忽视警告信息，因为有些编译器警告是不同编译平台的原因，也有可能会造成致命的错误
+
+### 条款54：让自己熟悉包括TR1在内的标准程序库
+* C++98列入的C++标准库的主要成分有：
+> 1. STL，覆盖容器，迭代器，算法，仿函数（函数对象），容器适配器，内存管理器
+> 2. Iostreams，覆盖用户自定缓冲功能、国际化I/O，以及预定义的对象，cin、cout,cerr和clog
+> 3. 国际化支持，包括多区域能力，像wchar_t和wstring（由wchar_ts组成的string）等类型都对促进Unicode有帮助
+> 4. 数值处理，包括复数模板（complex）和纯数值数组（valarray)
+> 5. 异常阶层体系，包括base class exception 及其derived classes logic_error和runtime_error，以及更深继承的各个classes
+
+* TR1详细叙述了14个新组建，都放在了std命名空间内，更确切的说是放在了嵌套的命名空间tr1内
+```c++
+std::str1::shared_ptr //一般std::作用域可以省略不写
+```
+> 1. 智能指针
