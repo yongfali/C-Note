@@ -355,4 +355,22 @@ void operator delete(void* rawMemory, std::size_t size) throw();//class作用域
 ```c++
 std::str1::shared_ptr //一般std::作用域可以省略不写
 ```
-> 1. 智能指针
+> 1. 智能指针，shared_ptr 和 weak_ptr前者主要用于引用计数表示指向同一个资源对象的数量，当其数量为0时便会自动释放资源，但是碰到环形引用时便会出现资源泄漏的情况，因此使用weak_ptr协助前者进行资源的管理，后者并不真正的拥有资源也不参与计数
+> 2. tr1::function，表示接受函数作为参数（也称为函数签名可以显式也可以隐式）
+> 3. tr1::bind，能够和STL容器相结合使用
+> 4. Hash tables，用于实现unordered_set/multiset,unordered_map/multimap,标识无序的键值对存储
+> 5. 正则表达式，包括其匹配、查找、替换等操作
+> 6. Tuples（变量组），这是标准程序库中的pair template的新一代制品，pair只有两个对象，first和second
+> 7. tf1::array，本质上是个STL化数组，支持begin和end的数组
+> 8. tf::mem_fn,这个语句构造上与成员函数指针一致的东西
+> 9. tf::reference_wrapper，一个让引用更像对象的行为
+> 10. 随机数（random number）生成工具，大大的超越了rand
+> 11. 数学特殊函数的引入
+> 12. C99兼容扩充
+> 13. Type traits
+> 14. tr1::result_of,这个是模板用来推导函数调用的返回类型
+
+### 条款55：让自己熟悉Boost
+* Boost是一个社群，也是一个网站，主要致力于免费、源码开放、同僚复审的C++程序库开发，它提供了很对TR1组件实现品，以及其他程序库
+
+
