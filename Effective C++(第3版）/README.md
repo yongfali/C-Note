@@ -302,7 +302,7 @@ private:
 
 ## 第八章 定制new和delete
 ### 条款49：了解new-handler的行为
-* se_new_handler 允许客户指定一个函数，在内存分配无法获得满足时被调用
+* set_new_handler 允许客户指定一个函数，在内存分配无法获得满足时被调用
 * Nothrow new 是一个颇为局侠的工具，因为他只适用于内存的分配；后继的构造函数调用还是可能抛出异常
 
 ### 条款50：了解new和delete的合理替换时机
