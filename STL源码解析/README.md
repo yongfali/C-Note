@@ -28,4 +28,7 @@ int main(){
 ```
 
 ### 第二章：空间配置器
-* 
+* SGI 虽然也定义有一个符合部分标准、名为allocator的配置器，但是SGI却从未使用过，也不建议我么使用，主要是因为其效率不佳，他只是把C++的::operator new 和::operator delete 做了一层薄薄的包装
+* STL规定的配置器结构示意图如下
+> ![](Images/STL_allocator.png)
+
