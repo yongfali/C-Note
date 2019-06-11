@@ -40,7 +40,4 @@ int main(){
 > 3. reference type 
 > 4. pointer type
 > 5. iterator_category：包括input iterator（只读）,output iterator（维写）, forward iterator, bidirectional iterator（双向迭代器）, random access iterator（随机迭代器，支持偏移量大于1）
-* [traits编程][1]主要是帮助算法识别迭代器的属性（通过内嵌的类型声明），提升算法的运行效率
-[1]: https://blog.csdn.net/shudou/article/details/10270971 "traits编程详解"
-
-
+* [traits编程](https://blog.csdn.net/shudou/article/details/10270971 "traits编程详解")主要是帮助算法识别迭代器的属性（通过内嵌的类型声明），提升算法的运行效率
