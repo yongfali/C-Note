@@ -113,4 +113,4 @@ public:
 ...
 };
 ```
-> ![](Iamges/vector_struct.png)
+> ![](Images/vector_struct.png)
