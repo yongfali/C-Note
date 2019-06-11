@@ -62,3 +62,55 @@ int main(int argc, const char *argv[])
 }
 //函数func作为对外接口，实际的操作却由函数func_impl执行，通过函数func_impl的参数类型推导，获取到Iterator指向对象的类型T，但是如果需要返回类型是迭代器所指对象的类型，其无能为力了
 ```
+
+### 第四章：序列容器
+1. vector概述
+* vector是动态的array，当容量不足时以两倍的方式进行扩容，然后完成元素的搬迁和原空间的释放，位于头文件<vector>中
+
+2. vector定义摘要
+* SGI STL将vector实现于更底层的<stl_vector.h>
+
+3. vector的迭代器
+```c++
+//vector容器的迭代器模板
+tempalte <typename T, class Alloc = alloc>
+class vector{
+public:
+	typedef T value_type;
+	typedef value_type* iterator;
+...
+};
+```
+4. vector的数据结构
+* vector采用的数线性连续空间，它以两个迭代器start和finish分别指向配置来的连续空间目前已经使用的范围，并以迭代器end_of_storage指向整个连续空间的尾端（包含备用空间）。具体示意图如下图所示
+
+```c++
+template <typename T, class Alloc = alloc>
+class vector{
+//嵌套类型
+public:
+	typedef T           value_type;
+	typedef value_type* pointer;
+	typedef value_type* iterator;
+	typedef value_type& reference;
+	typedef size_t      size_type;
+	typedef ptrdiff_t difference_type;
+...
+protected:
+	iterator start;
+	iterator finish;
+	iterator end_of_storage;
+
+public:
+	iterator begin(){return start;}
+	iterator end(){return finish;}
+	size_type size() const{return size_type(end() - begin());}
+	size_type capacity() const{return size_type(end_of_storage - begin());}
+	bool empty(){return begin() == end();}
+	reference operator[](size_type n) {return *(beging() + n);}
+	reference front() {return *(begin());}
+	reference back() {return *(end() - 1);}
+...
+};
+```
+> ![](Iamges/vector_struct.png)
