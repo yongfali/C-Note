@@ -32,3 +32,15 @@ int main(){
 * STL规定的配置器结构示意图如下
 > ![](Images/STL_allocator.png)
 
+### 第三章：迭代器概念与traits编程技法
+* STL的中心思想就是将容器和算法分开，彼此独立设计，最后通过一个迭代器使他们链接在一起（迭代器扮演桥梁的作用）
+* 迭代器相应型别有五种
+> 1. value type:是指迭代器所指对象的型别
+> 2. difference type：是指两个迭代器之间的距离，可以用来表示一个容器的最大容量
+> 3. reference type 
+> 4. pointer type
+> 5. iterator_category：包括input iterator（只读）,output iterator（维写）, forward iterator, bidirectional iterator（双向迭代器）, random access iterator（随机迭代器，支持偏移量大于1）
+* [traits编程][1]主要是帮助算法识别迭代器的属性（通过内嵌的类型声明），提升算法的运行效率
+[1]: https://blog.csdn.net/shudou/article/details/10270971 "traits编程详解"
+
+
