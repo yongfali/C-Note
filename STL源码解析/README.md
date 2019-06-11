@@ -41,3 +41,24 @@ int main(){
 > 4. pointer type
 > 5. iterator_category：包括input iterator（只读）,output iterator（维写）, forward iterator, bidirectional iterator（双向迭代器）, random access iterator（随机迭代器，支持偏移量大于1）
 * [traits编程](https://blog.csdn.net/shudou/article/details/10270971 "traits编程详解")主要是帮助算法识别迭代器的属性（通过内嵌的类型声明），提升算法的运行效率
+```c++
+template<typename Iterator, typename T>
+void func_impl(Iterator iter, T t)
+{
+    T temp;//这里就解决了问题
+    //这里做原本func()的工作
+}
+ 
+template<typename Iterator>
+void func(Iterator iter)
+{
+    func_impl(iter, *iter);//func的工作全部都移到func_impl里面了
+}
+ 
+int main(int argc, const char *argv[])
+{
+    int i;
+    func(&i);
+}
+//函数func作为对外接口，实际的操作却由函数func_impl执行，通过函数func_impl的参数类型推导，获取到Iterator指向对象的类型T，但是如果需要返回类型是迭代器所指对象的类型，其无能为力了
+```
