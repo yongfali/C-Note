@@ -114,3 +114,62 @@ public:
 };
 ```
 > ![](Images/vector_struct.png)
+
+5. vector 的构造与内存管理
+* vector提供了很多默认的构造函数，其中一个允许我们指定空间大小及初值
+```c++
+//构造函数
+vector(size_type n, const T& value){fill_initialize(n, value);}
+
+//填充并初始化
+void fill_initialize(size_type n, const T& value){
+	start = allocate_and_fill(n, value);
+	finish = start + n;
+	end_of_storage = finish;
+}
+
+//配置而后填充
+iterator allocate_and_fill(size_type n, const T& x){
+	iterator result = data_allocator::allocate(n); //配置n个元素空间
+	uninitialized_fill_n(result, n, x); //会根据第一参数的型别特性决定使用算法fill_n()或反复调用construct()
+	return result;
+}
+```
+* push_back()将新元素插入时会先检测是否还要备用空间，有的话直接插入并调整finish++，否则就扩充空间（重新配置两倍大小空间->移动数据->释放原来的空间），这个过程会使院迭代器失效，因此需要赋值给一个新的迭代器
+
+6. vector的元素操作：pop_back, erase,clear,insert
+
+7. list概述
+* list是一个双向链表，空间不是连续的，对于删除和插入永远是常数个时间
+```c++
+template <typename T>
+struct __list_node{
+	typedef void* void_pointer;
+	void_pointer prev; // void型，其实可以设为__list_node<T>*
+	void_pointer next;
+	T data;
+}
+```
+* list的插入和删除只会使被操作的节点的迭代器失效，因为其地址不是连续的，因此只需要对迭代器指针++即可，而vector由于其连续的存储空间会导致元素位置的前移或后移而使得所有迭代器指针失效
+> ![](Images/list_iterator.png)
+
+8. list的构造与内存管理
+* list_test.cpp测试了list的部分操作
+* 它的构造和析构同vector大致相似
+* list提供一个默认的构造函数不指定任何参数而创建一个空list，如下图所示
+```c++
+public:
+	list(){empty_initialize();}
+
+protected:
+	void empty_initialize(){
+		node = get_node();
+		node -> prev = node;
+		node -> next = node;
+	}
+```
+> ![](Images/empty_list.png)
+* list的push_back()函数内部实际上调用的是insert函数
+```c++
+void push_back(const T& x){ insert(end(), x);}
+```
