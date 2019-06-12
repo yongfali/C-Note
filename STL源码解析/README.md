@@ -64,13 +64,13 @@ int main(int argc, const char *argv[])
 ```
 
 ### 第四章：序列容器
-1. vector概述
+### 1. vector概述
 * vector是动态的array，当容量不足时以两倍的方式进行扩容，然后完成元素的搬迁和原空间的释放，位于头文件<vector>中
 
-2. vector定义摘要
+1.1. vector定义摘要
 * SGI STL将vector实现于更底层的<stl_vector.h>
 
-3. vector的迭代器
+1.2. vector的迭代器
 ```c++
 //vector容器的迭代器模板
 tempalte <typename T, class Alloc = alloc>
@@ -81,7 +81,7 @@ public:
 ...
 };
 ```
-4. vector的数据结构
+1.3. vector的数据结构
 * vector采用的数线性连续空间，它以两个迭代器start和finish分别指向配置来的连续空间目前已经使用的范围，并以迭代器end_of_storage指向整个连续空间的尾端（包含备用空间）。具体示意图如下图所示
 
 ```c++
@@ -115,7 +115,7 @@ public:
 ```
 > ![](Images/vector_struct.png)
 
-5. vector 的构造与内存管理
+1.4. vector 的构造与内存管理
 * vector提供了很多默认的构造函数，其中一个允许我们指定空间大小及初值
 ```c++
 //构造函数
@@ -137,9 +137,9 @@ iterator allocate_and_fill(size_type n, const T& x){
 ```
 * push_back()将新元素插入时会先检测是否还要备用空间，有的话直接插入并调整finish++，否则就扩充空间（重新配置两倍大小空间->移动数据->释放原来的空间），这个过程会使院迭代器失效，因此需要赋值给一个新的迭代器
 
-6. vector的元素操作：pop_back, erase,clear,insert
+1.5. vector的元素操作：pop_back, erase,clear,insert
 
-7. list概述
+####2. list概述
 * list是一个双向链表，空间不是连续的，对于删除和插入永远是常数个时间
 ```c++
 template <typename T>
@@ -153,7 +153,7 @@ struct __list_node{
 * list的插入和删除只会使被操作的节点的迭代器失效，因为其地址不是连续的，因此只需要对迭代器指针++即可，而vector由于其连续的存储空间会导致元素位置的前移或后移而使得所有迭代器指针失效
 > ![](Images/list_iterator.png)
 
-8. list的构造与内存管理
+2.1. list的构造与内存管理
 * list_test.cpp测试了list的部分操作
 * 它的构造和析构同vector大致相似
 * list提供一个默认的构造函数不指定任何参数而创建一个空list，如下图所示
