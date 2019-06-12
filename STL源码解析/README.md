@@ -250,3 +250,23 @@ class queue{
 5.2 heap算法
 * push_heap算法，实际上就是一个堆排序算法，通过不断地调整二叉树中父节点和左右子节点的大小而实现的
 > 可参见我的[排序算法-堆排序](https://github.com/yongfali/JianzhiOffer/blob/master/allSort.cpp "堆排序算法代码")
+> ![](Images/push_heap.png)
+* pop_heap算法，每次取出堆顶元素然后调整元素使之为新的堆，<strong>实际上是把堆顶元素放入到vector或array的尾端，完成删除操作。</strong> 同push_heap算法实现原理一样，都对应堆排序
+> ![](Images/pop_heap.png)
+* 
+sort_heap算法实际就是不断的pop然后调整堆顶元素的过程，从而达到排序的过程，大顶堆可以实现递增排序，小顶堆可以实现递减排序
+* make_heap算法，生成堆的过程,传入迭代器的首尾指针即可
+* heap的测试见heap_test.cpp 
+
+#### 6. priority_queue
+
+6.1 概述
+* 可以理解为一个拥有权值的queue，缺省情况下是一个max-heap，内部实现的默认容器是vector，再加上heap的处理规则就行，也是一种容器适配器
+```c++
+template <typename T, class Sequence = vector<int>
+			class Compare = less<typename Sequence::value_type> >
+class  priority_queue{
+	....
+};
+```
+
