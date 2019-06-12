@@ -139,7 +139,7 @@ iterator allocate_and_fill(size_type n, const T& x){
 
 1.5. vector的元素操作：pop_back, erase,clear,insert
 
-####2. list概述
+#### 2. list概述
 * list是一个双向链表，空间不是连续的，对于删除和插入永远是常数个时间
 ```c++
 template <typename T>
@@ -173,3 +173,22 @@ protected:
 ```c++
 void push_back(const T& x){ insert(end(), x);}
 ```
+2.2 list的操作
+* 常见的操作有push_front(),push_back(),erase(),pop_front(),pop_back(),clear(),remove(),unique(),splice(),merge(),reverse(),sort()
+* 由于list不是连续的因此clear()nebula是不是通过erase删除区间来执行的，而是通过循环遍历一个一个节点删除，析构的
+* list内部提供了一个所谓的迁移操作（transfer）：将某连续范围内的元素迁移到指定的位置之前。这也是为实现splice、sort和merge等奠定了基础
+
+#### 3. deque
+
+3.1 deque概述
+* 是一个双向开口的连续线性存储空间，即容器两端都可以进行插入和删除操作，示意图如下
+> ![](Images/deque_struct.png)
+* deque和vector的区别在于，前者没有容量的概念，因为它是一个动态分段连续的空间组成的，有段控中心对分配的每一段进行管理（段控中心实际上就是一个map,每一个map对应管理一个连续的缓存空间区)
+* deque 本身比较复杂其内部的实现，因此其迭代器的实现也很复杂，主要在分段连续中的迭代器的++或--和跳转操作等如何实现平滑的转移而让用户没有察觉，因此在能用vector解决问题的时候，尽量不要使用deque
+* deque内部的排序是通过先把元素复制到vector中排好序后再复制回来
+* ![](Images/deque.png)
+
+3.2 deque的迭代器
+* deque的中控器（控制中心）、缓冲区、迭代器的示意图如下所示
+> ![](Images/deque_iterator.png)
+
