@@ -183,7 +183,7 @@ void push_back(const T& x){ insert(end(), x);}
 3.1 deque概述
 * 是一个双向开口的连续线性存储空间，即容器两端都可以进行插入和删除操作，示意图如下
 > ![](Images/deque_struct.png)
-* deque和vector的区别在于，前者没有容量的概念，因为它是一个动态分段连续的空间组成的，有段控中心对分配的每一段进行管理（段控中心实际上就是一个map,每一个map对应管理一个连续的缓存空间区)
+* deque和vector的区别在于，前者没有容量的概念，因为它是一个动态分段连续的空间组成的（也称为缓冲区，可以看做是一个个的vector组成），有段控中心对分配的每一段进行管理（段控中心实际上就是一个map,每一个map对应管理一个连续的缓存空间区)
 * deque 本身比较复杂其内部的实现，因此其迭代器的实现也很复杂，主要在分段连续中的迭代器的++或--和跳转操作等如何实现平滑的转移而让用户没有察觉，因此在能用vector解决问题的时候，尽量不要使用deque
 * deque内部的排序是通过先把元素复制到vector中排好序后再复制回来
 * ![](Images/deque.png)
@@ -191,4 +191,62 @@ void push_back(const T& x){ insert(end(), x);}
 3.2 deque的迭代器
 * deque的中控器（控制中心）、缓冲区、迭代器的示意图如下所示
 > ![](Images/deque_iterator.png)
+* 注：迭代器中包含四部分
+> 1. cur表示所指的缓冲区中现行元素（deque是由多个缓冲区拼接而成的），如上图所示
+> 2. first 表示此迭代器所指缓冲区的头
+> 3. last表示此迭代器所指指缓冲区的尾（含备用空间）
+> 4. node 指向段控中心，对应map中的哪一个节点
 
+3.3 deque的数据结构
+* 和其它序列容器相似
+
+3.4 deque的构造与内存管理
+* deque的段控中心map一般会前后预留一些，以便扩充时用
+* map的每个节点对应一个缓冲区（一个缓冲区一般是一个连续的vector实现）map start指针刚开始一般位于段控中心中部，这样便于头尾的扩充
+* 当缓冲内容不足时会触发push_back_aux()先配置一块新的缓冲区，再设新元素内容，然后更改迭代器finish的状态
+* 具体可以通过以下两个图理解，第二个图对应的是触发了push_back_aux()
+> ![](Images/deque_status.png)
+> ![](Images/deque_status2.png)
+* 前端插入同后端插入原理相似，触发的是push_front_aux()函数而已
+
+3.5 deque的常见操作
+* pop_back(),pop_front(),push_back(),push_front(),clear(),erase(),insert(),empty(),size()等
+
+#### 4. stack
+
+4.1 概述
+* stack是一种后进先出的数据结构，只允许对栈顶的元素进行操作，位于头文件```<stack>```中。不存在遍历行为，因此没有迭代器，结构如下图所示
+> ![](Images/stack.png)
+* stack的底层默认实现是deque，是对其进行了一些定制化的改变，因此也称为容器适配器
+```c++
+template <typename T, class Sequence = deque<T> >
+class stack{
+	.....
+};
+```
+* stack 也可以使用list作为其底层的序列容器，因为list也满足双端开口和一些基本的容器函数
+
+#### 5. queue
+
+5.1 概述
+* queue是一种先进先出的数据结构，位于头文件```<queue>```中，只允许从队尾插入新值，从队首删除元素，其它位置元素则不可获取或操作，也没有迭代器，结构如下图所示
+> ![](Images/queue.png)
+* queue的底层默认实现是deque，是对其进行了一些定制化的改变，因此也称为容器适配器
+```c++
+template <typename T, class Sequence = deque<T> >
+class queue{
+	.....
+};
+```
+
+#### 5. heap
+
+5.1 概述
+* heap不属于STL容器的组建，但是他是实现优先队列的底层机制
+* heap内部是一个完全二叉树，可以用一个数组或vector表示，位置0表示堆顶元素，根据堆顶元素可以分为max-heap和min-heap
+> max-heap指的是二叉树中的每一个父节点都大于其左右子节点，STL默认的是max-heap
+> min-heap指的是二叉树中的每一个父节点都小于其左右子节点
+
+5.2 heap算法
+* push_heap算法，实际上就是一个堆排序算法，通过不断地调整二叉树中父节点和左右子节点的大小而实现的
+> 可参见我的[排序算法-堆排序](https://github.com/yongfali/JianzhiOffer/blob/master/allSort.cpp，, "堆排序算法代码")
