@@ -249,4 +249,4 @@ class queue{
 
 5.2 heap算法
 * push_heap算法，实际上就是一个堆排序算法，通过不断地调整二叉树中父节点和左右子节点的大小而实现的
-> 可参见我的[排序算法-堆排序](https://github.com/yongfali/JianzhiOffer/blob/master/allSort.cpp，, "堆排序算法代码")
+> 可参见我的[排序算法-堆排序](https://github.com/yongfali/JianzhiOffer/blob/master/allSort.cpp "堆排序算法代码")
