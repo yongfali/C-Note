@@ -269,4 +269,26 @@ class  priority_queue{
 	....
 };
 ```
+*  priority_queue 位于头文件```c++ <queue> ```中，没有迭代器，只能对队首的元素进行读取操作，因此也不提供遍历的功能
 
+#### 7. slist
+
+7.1 概述
+* Slist与list的区别在于前者是单向链表，并且不是STL中标准的容器，不过单向链表消耗的空间更小，某些操作效率更高
+* 由于单向因此，在指定位置插入或删除都需要从头遍历链表因此，slist只提供了insert_after()和erase_after()，当然也不提供push_back，而是提供push_front，有点类似于倒序创建链表
+
+### 第五章：关联式容器
+* 标准的关联式容器包括set和map，以及他两的衍生体multiset和multimap，他们的底层实现均为红黑树
+* SGI STL还提供了不在标准规范之内的关联容器，hash_set和hash_map，以及对应的hash_multiset和hash_multimap，他们的底层均为hashmap
+> ![](Images/all_container.png)
+1. 树的介绍
+* 平衡树指的是任意一个节点的左右子树的深度之差不超过1，限制这一条件主要是为了防止树在频繁的插入和删除过程中退化为单链表
+* 树的平衡被破坏指的是某个节点的左右子树的深度之差为2，具体可以分为以下四种情况
+> 1. 插入节点位于X的左子节点的左子树-左左
+> 2. 插入节点位于X的左子节点的右子树-左右
+> 3. 插入节点位于X的右子节点的左子树-右左
+> 4. 插入节点位于X的右子节点的右子树-右右
+> ![](Images/AVL_tree.png)
+
+* 针对以上四种情况其中1和4称为外侧插入，可以通过单旋转的方式进行调整，2和3称为内侧插入，可通过双旋转方式调整
+> ![](Images/tree_single_rotation.png) ![](Images/tree_double_rotation.png)
