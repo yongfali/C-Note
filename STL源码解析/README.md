@@ -292,3 +292,30 @@ class  priority_queue{
 
 * 针对以上四种情况其中1和4称为外侧插入，可以通过单旋转的方式进行调整，2和3称为内侧插入，可通过双旋转方式调整
 > ![](Images/tree_single_rotation.png) ![](Images/tree_double_rotation.png)
+
+* **右旋即将当前节点调转至其左孩子节点的右节点，左旋则为右孩子的左节点，红黑树旋转只此两种。实际上只针对不平的点进行旋转调整**
+
+1.2 红黑树（RB-tree）
+* 也是一种平衡二叉搜索树，作为关联容器的底部实现机制，具有以下性质
+> 1. 每个节点不是红色就是黑色
+> 2. 根节点为黑色
+> 3. 如果某一节点为红色，其子节点必须为黑色，也就是父子节点不能同时为红色【新增节点之父节点必须为黑】
+> 4. 任一节点到树的尾端（NULL，也被视为黑节点）的任何路径，所含的黑节点树必须相同【该条款决定插入的新节点必须为红色】
+
+* 对于二叉搜索树而言其极值是很容易找到的，分别位于最左和最右
+```c++
+static base_ptr minnum(base_ptr pt){
+	while(pt->left != nullptr)
+		pt = pt -> left;
+	return pt;
+}
+
+static base_ptr maxnum(base_ptr pt){
+	while(pt->right != nullptr)
+		pt = pt -> right;
+	return pt;
+}
+```
+1.3 RB-tree的元素操作
+* 有两种插入操作，insert_unique()和insert_equal()，前者表示不允许插入重复的值，后者可以，插入之后需要对树进行平衡操作，即调用__rb_tree_rebalance()
+
