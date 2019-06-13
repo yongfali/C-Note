@@ -67,10 +67,10 @@ int main(int argc, const char *argv[])
 ### 1. vector概述
 * vector是动态的array，当容量不足时以两倍的方式进行扩容，然后完成元素的搬迁和原空间的释放，位于头文件<vector>中
 
-1.1. vector定义摘要
+**1.1. vector定义摘要**
 * SGI STL将vector实现于更底层的<stl_vector.h>
 
-1.2. vector的迭代器
+**1.2. vector的迭代器**
 ```c++
 //vector容器的迭代器模板
 tempalte <typename T, class Alloc = alloc>
@@ -81,7 +81,7 @@ public:
 ...
 };
 ```
-1.3. vector的数据结构
+**1.3. vector的数据结构**
 * vector采用的数线性连续空间，它以两个迭代器start和finish分别指向配置来的连续空间目前已经使用的范围，并以迭代器end_of_storage指向整个连续空间的尾端（包含备用空间）。具体示意图如下图所示
 
 ```c++
@@ -115,7 +115,7 @@ public:
 ```
 > ![](Images/vector_struct.png)
 
-1.4. vector 的构造与内存管理
+**1.4. vector 的构造与内存管理**
 * vector提供了很多默认的构造函数，其中一个允许我们指定空间大小及初值
 ```c++
 //构造函数
@@ -137,7 +137,7 @@ iterator allocate_and_fill(size_type n, const T& x){
 ```
 * push_back()将新元素插入时会先检测是否还要备用空间，有的话直接插入并调整finish++，否则就扩充空间（重新配置两倍大小空间->移动数据->释放原来的空间），这个过程会使院迭代器失效，因此需要赋值给一个新的迭代器
 
-1.5. vector的元素操作：pop_back, erase,clear,insert
+**1.5. vector的元素操作：pop_back, erase,clear,insert**
 
 #### 2. list概述
 * list是一个双向链表，空间不是连续的，对于删除和插入永远是常数个时间
@@ -153,7 +153,7 @@ struct __list_node{
 * list的插入和删除只会使被操作的节点的迭代器失效，因为其地址不是连续的，因此只需要对迭代器指针++即可，而vector由于其连续的存储空间会导致元素位置的前移或后移而使得所有迭代器指针失效
 > ![](Images/list_iterator.png)
 
-2.1. list的构造与内存管理
+**2.1. list的构造与内存管理**
 * list_test.cpp测试了list的部分操作
 * 它的构造和析构同vector大致相似
 * list提供一个默认的构造函数不指定任何参数而创建一个空list，如下图所示
@@ -173,14 +173,14 @@ protected:
 ```c++
 void push_back(const T& x){ insert(end(), x);}
 ```
-2.2 list的操作
+**2.2 list的操作**
 * 常见的操作有push_front(),push_back(),erase(),pop_front(),pop_back(),clear(),remove(),unique(),splice(),merge(),reverse(),sort()
 * 由于list不是连续的因此clear()nebula是不是通过erase删除区间来执行的，而是通过循环遍历一个一个节点删除，析构的
 * list内部提供了一个所谓的迁移操作（transfer）：将某连续范围内的元素迁移到指定的位置之前。这也是为实现splice、sort和merge等奠定了基础
 
 #### 3. deque
 
-3.1 deque概述
+**3.1 deque概述**
 * 是一个双向开口的连续线性存储空间，即容器两端都可以进行插入和删除操作，示意图如下
 > ![](Images/deque_struct.png)
 * deque和vector的区别在于，前者没有容量的概念，因为它是一个动态分段连续的空间组成的（也称为缓冲区，可以看做是一个个的vector组成），有段控中心对分配的每一段进行管理（段控中心实际上就是一个map,每一个map对应管理一个连续的缓存空间区)
@@ -188,7 +188,7 @@ void push_back(const T& x){ insert(end(), x);}
 * deque内部的排序是通过先把元素复制到vector中排好序后再复制回来
 * ![](Images/deque.png)
 
-3.2 deque的迭代器
+**3.2 deque的迭代器**
 * deque的中控器（控制中心）、缓冲区、迭代器的示意图如下所示
 > ![](Images/deque_iterator.png)
 * 注：迭代器中包含四部分
@@ -197,10 +197,10 @@ void push_back(const T& x){ insert(end(), x);}
 > 3. last表示此迭代器所指指缓冲区的尾（含备用空间）
 > 4. node 指向段控中心，对应map中的哪一个节点
 
-3.3 deque的数据结构
+**3.3 deque的数据结构**
 * 和其它序列容器相似
 
-3.4 deque的构造与内存管理
+**3.4 deque的构造与内存管理**
 * deque的段控中心map一般会前后预留一些，以便扩充时用
 * map的每个节点对应一个缓冲区（一个缓冲区一般是一个连续的vector实现）map start指针刚开始一般位于段控中心中部，这样便于头尾的扩充
 * 当缓冲内容不足时会触发push_back_aux()先配置一块新的缓冲区，再设新元素内容，然后更改迭代器finish的状态
@@ -209,12 +209,12 @@ void push_back(const T& x){ insert(end(), x);}
 > ![](Images/deque_status2.png)
 * 前端插入同后端插入原理相似，触发的是push_front_aux()函数而已
 
-3.5 deque的常见操作
+**3.5 deque的常见操作**
 * pop_back(),pop_front(),push_back(),push_front(),clear(),erase(),insert(),empty(),size()等
 
 #### 4. stack
 
-4.1 概述
+**4.1 概述**
 * stack是一种后进先出的数据结构，只允许对栈顶的元素进行操作，位于头文件```<stack>```中。不存在遍历行为，因此没有迭代器，结构如下图所示
 > ![](Images/stack.png)
 * stack的底层默认实现是deque，是对其进行了一些定制化的改变，因此也称为容器适配器
@@ -228,7 +228,7 @@ class stack{
 
 #### 5. queue
 
-5.1 概述
+**5.1 概述**
 * queue是一种先进先出的数据结构，位于头文件```<queue>```中，只允许从队尾插入新值，从队首删除元素，其它位置元素则不可获取或操作，也没有迭代器，结构如下图所示
 > ![](Images/queue.png)
 * queue的底层默认实现是deque，是对其进行了一些定制化的改变，因此也称为容器适配器
@@ -241,13 +241,13 @@ class queue{
 
 #### 5. heap
 
-5.1 概述
+**5.1 概述**
 * heap不属于STL容器的组建，但是他是实现优先队列的底层机制
 * heap内部是一个完全二叉树，可以用一个数组或vector表示，位置0表示堆顶元素，根据堆顶元素可以分为max-heap和min-heap
 > max-heap指的是二叉树中的每一个父节点都大于其左右子节点，STL默认的是max-heap
 > min-heap指的是二叉树中的每一个父节点都小于其左右子节点
 
-5.2 heap算法
+**5.2 heap算法**
 * push_heap算法，实际上就是一个堆排序算法，通过不断地调整二叉树中父节点和左右子节点的大小而实现的
 > 可参见我的[排序算法-堆排序](https://github.com/yongfali/JianzhiOffer/blob/master/allSort.cpp "堆排序算法代码")
 > ![](Images/push_heap.png)
@@ -260,7 +260,7 @@ sort_heap算法实际就是不断的pop然后调整堆顶元素的过程，从�
 
 #### 6. priority_queue
 
-6.1 概述
+**6.1 概述**
 * 可以理解为一个拥有权值的queue，缺省情况下是一个max-heap，内部实现的默认容器是vector，再加上heap的处理规则就行，也是一种容器适配器
 ```c++
 template <typename T, class Sequence = vector<int>
@@ -273,7 +273,7 @@ class  priority_queue{
 
 #### 7. slist
 
-7.1 概述
+**7.1 概述**
 * Slist与list的区别在于前者是单向链表，并且不是STL中标准的容器，不过单向链表消耗的空间更小，某些操作效率更高
 * 由于单向因此，在指定位置插入或删除都需要从头遍历链表因此，slist只提供了insert_after()和erase_after()，当然也不提供push_back，而是提供push_front，有点类似于倒序创建链表
 
@@ -281,7 +281,7 @@ class  priority_queue{
 * 标准的关联式容器包括set和map，以及他两的衍生体multiset和multimap，他们的底层实现均为红黑树
 * SGI STL还提供了不在标准规范之内的关联容器，hash_set和hash_map，以及对应的hash_multiset和hash_multimap，他们的底层均为hashmap
 > ![](Images/all_container.png)
-1. 树的介绍
+**1. 树的介绍**
 * 平衡树指的是任意一个节点的左右子树的深度之差不超过1，限制这一条件主要是为了防止树在频繁的插入和删除过程中退化为单链表
 * 树的平衡被破坏指的是某个节点的左右子树的深度之差为2，具体可以分为以下四种情况
 > 1. 插入节点位于X的左子节点的左子树-左左
@@ -295,8 +295,8 @@ class  priority_queue{
 
 * **右旋即将当前节点调转至其左孩子节点的右节点，左旋则为右孩子的左节点，红黑树旋转只此两种。实际上只针对不平的点进行旋转调整**
 
-1.2 红黑树（RB-tree）
-* 也是一种平衡二叉搜索树，作为关联容器的底部实现机制，具有以下性质
+**1.2 红黑树（RB-tree）**
+* 也是一种特殊二叉搜索树，作为关联容器的底部实现机制，具有以下性质
 > 1. 每个节点不是红色就是黑色
 > 2. 根节点为黑色
 > 3. 如果某一节点为红色，其子节点必须为黑色，也就是父子节点不能同时为红色【新增节点之父节点必须为黑】
@@ -316,6 +316,20 @@ static base_ptr maxnum(base_ptr pt){
 	return pt;
 }
 ```
-1.3 RB-tree的元素操作
+**1.3 RB-tree的元素操作**
 * 有两种插入操作，insert_unique()和insert_equal()，前者表示不允许插入重复的值，后者可以，插入之后需要对树进行平衡操作，即调用__rb_tree_rebalance()
+
+**2. set**
+* set是一个键和值相同的关联容器，会根据键值自动排序（由于底层是红黑树为平衡二叉搜索树），不允许重复的键值存在
+* **set集合的迭代器为const_iterator，禁止对元素的值进行修改等操作**
+
+```c++
+template <typename Key, class Compare = less<Key>, class Alloc = alloc>
+class set{
+	...
+};
+```
+* set 内部初始化实际调用的RB-tree的insert_unique()方法，实现键值的唯一，而multiset 才调用 insert_equal()
+
+**3. map**
 
