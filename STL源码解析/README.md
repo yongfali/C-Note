@@ -350,10 +350,10 @@ struct pair{
 * **map集合的迭代器为const_iterator，禁止对元素的值进行修改等操作**
 * map的其它性质和操作同set相似
 
-** 4. multiset/multimap**
+**4. multiset/multimap**
 * 和set/map基本没有区，只是底层RB-tree的插入调用的都是insert_equal()，即允许重复值插入
 
-** 5. hashtable**
+**5. hashtable**
 * hashtable容易产生hash冲突（常用的hash是求模取余法），解决的方法如下：
 > 1. 线性探测：指的是当array对应位置被占据时，就对array循环探测每一个位置，直到有一个空位就插入，这样的缺陷就是探测时间开销过大，查找也类似当经过hash函数算出的位置不是目标值时，也进行循环线性搜索直到，找到该值
 > 2. 二次探测：指的是当hash计算出的位置已经被占用时，不再线性探测空位置，而是采用 $s+1^2, s+2^2, s+3^2 ... s+i^2$，进行空位的探测
