@@ -357,5 +357,29 @@ struct pair{
 * hashtable容易产生hash冲突（常用的hash是求模取余法），解决的方法如下：
 > 1. 线性探测：指的是当array对应位置被占据时，就对array循环探测每一个位置，直到有一个空位就插入，这样的缺陷就是探测时间开销过大，查找也类似当经过hash函数算出的位置不是目标值时，也进行循环线性搜索直到，找到该值
 > 2. 二次探测：指的是当hash计算出的位置已经被占用时，不再线性探测空位置，而是采用 \\(s+1^2, s+2^2, s+3^2 ... s+i^2\\)，进行空位的探测
+> 3. 拉链法：即当hash计算出的位置已经被占用时，在该位置创建一个链表，对数据进行串联起来形成单链表或双链表（若链表过长也可以生成红黑树，二叉树之类的）**这也是SGI STL的hashtable采用的办法，如下图所示**
+> ![](Images/hashtable.png)
 
-> 拉链法：即当hash计算出的位置已经被占用时，在该位置创建一个链表，对数据进行串联起来形成单链表或双链表（若链表过长也可以生成红黑树，二叉树之类的）
+**5.1 hash function**
+* 位于头文件<stl_hash_fun.h>，全都是仿函数，主要是用于计算元素的位置
+
+**6. hash_set/hash_map**
+* 其底层的实现机制都是hashtable，两容器提供的操作实际也是调用其底层hashtable的操作行为而已，但是他们两者相对于set/map而言，其元素是**无序**的，这是由于RB-tree的性质所决定的。其它的一些性质和操作两者并没有多大的区别
+* 两者分别位于头文件<hash_set>和<hash_map>中
+```c++
+template <class value, class HashFcb = hash<table>,
+			class EqualKey = equal_to<Value>,
+			class Alloc = alloc>
+class hash_set{
+	....
+};
+```
+**7. hash_multiset/hash_multimap**
+* 其底层的实现机制都是hashtable，两容器提供的操作实际也是调用其底层hashtable的操作行为而已，但是他们两者相对于multiset/multimap而言，其元素同样是**无序**的，允许重复的值，因为hashtable底层插入的实现调用的是insert_equal()而不是insert_unique()
+* 两者分别位于头文件<hash_multiset>和<hash_multimap>中
+
+### 第六章：算法
+* 算法性能衡量的重要指标是其**时间效率**和**空间开销**
+* 质变算法和非质变算法的区别在于是否改变操作的对象值，不改变为非质变，反之为质变
+* SGI STL中的算法都有其对应的底层实现，但是都封装于上层头文件<algorithm>中
+* 
