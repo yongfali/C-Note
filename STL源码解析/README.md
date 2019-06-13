@@ -324,7 +324,7 @@ static base_ptr maxnum(base_ptr pt){
 * **set集合的迭代器为const_iterator，禁止对元素的值进行修改等操作**
 
 ```c++
-template <typename Key, class Compare = less<Key>, class Alloc = alloc>
+template <typename Key, class Compare = less<Key>, class Alloc = alloc> //缺省采用递增排序
 class set{
 	...
 };
@@ -333,3 +333,28 @@ class set{
 
 **3. map**
 
+* map的特性是所有的元素会根据键值自动排序，map内部的键值对实际是一个pair对象，定义于<stl_pair.h>中
+```c++
+template <typename T1, typename T2>
+struct pair{
+	typedef T1 first_type;
+	typedef T2 second_type;
+
+	T1 first;
+	T2 second;
+
+	pair() : first(T1()), second(T2()){}
+	pair(const T1& a, const T2& b) : first(a), second(b){}
+};
+```
+* **map集合的迭代器为const_iterator，禁止对元素的值进行修改等操作**
+* map的其它性质和操作同set相似
+
+** 4. multiset/multimap**
+* 和set/map基本没有区，只是底层RB-tree的插入调用的都是insert_equal()，即允许重复值插入
+
+** 5. hashtable**
+* hashtable容易产生hash冲突（常用的hash是求模取余法），解决的方法如下：
+> 1. 线性探测：指的是当array对应位置被占据时，就对array循环探测每一个位置，直到有一个空位就插入，这样的缺陷就是探测时间开销过大，查找也类似当经过hash函数算出的位置不是目标值时，也进行循环线性搜索直到，找到该值
+> 2. 二次探测：指的是当hash计算出的位置已经被占用时，不再线性探测空位置，而是采用 $s+1^2, s+2^2, s+3^2 ... s+i^2$，进行空位的探测
+> 拉链法：即当hash计算出的位置已经被占用时，在该位置创建一个链表，对数据进行串联起来形成单链表或双链表（若链表过长也可以生成红黑树，二叉树之类的）
