@@ -376,7 +376,7 @@ class hash_set{
 ```
 **7. hash_multiset/hash_multimap**
 * 其底层的实现机制都是hashtable，两容器提供的操作实际也是调用其底层hashtable的操作行为而已，但是他们两者相对于multiset/multimap而言，其元素同样是**无序**的，允许重复的值，因为hashtable底层插入的实现调用的是insert_equal()而不是insert_unique()
-* 两者分别位于头文件<hash_multiset>和<hash_multimap>中
+* 两者分别位于头文件<hash_set>和<hash_map>中
 
 ### 第六章：算法
 * 算法性能衡量的重要指标是其**时间效率**和**空间开销**
@@ -387,7 +387,110 @@ class hash_set{
 
 **6.1. 数值算法（numeric）**
 * 必须包含头文件<numeric>，SGI实现于<stl_numeric.h>
-* 仿函数的头文件<functional>
+* 仿函数的头文件```c++ <functional>```
 
 **6.2.基本算法**
 * STL中的算法基本操作的是容器的**迭代器对象** 
+
+**6.3. set相关算法**
+* STL一共提供了四种与set相关的算法，分别是并集（union），交集（intersection），差集（difference），对称差集（symmetric difference）
+* 6.3.1. set_union()，可构造两个集合的并集，以排序区间表示，返回一个迭代器**指向输出区间的尾端**
+```c++
+template<class InputIterator1, class InputIterator2, class OutputInterator>
+OutputIterator set_union(InputIterator1 first1, InputIterator1 last1,
+						InputIterator2 first2, InputIterator2 last2,
+						OutputInterator result){
+while(first1 != last1 && first2 != last2){
+	if(*first1 < *first2){
+		*result = *first1;
+		++first1;
+	}
+	else if(*first1 > *first2){
+		*result = *first2;
+		++first2;
+	}
+	else{
+		*result = *first1;
+		++first1;
+		++first2;
+	}
+	++result;
+}
+	//当一个区间到达尾端时结束循环，把剩下的值复制到result中
+	return copy(first2, last2, copy(first1, last1, result));
+} 
+```
+> ![](Images/set_union.png)
+* 6.3.2. set_intersection()，可构造两个集合的交集，以排序区间表示，返回一个迭代器**指向输出区间的尾端**
+```c++
+template<class InputIterator1, class InputIterator2, class OutputInterator>
+OutputIterator set_intersection(InputIterator1 first1, InputIterator1 last1,
+						InputIterator2 first2, InputIterator2 last2,
+						OutputInterator result){
+while(first1 != last1 && first2 != last2){
+	if(*first1 < *first2){
+		++first1;
+	}
+	else if(*first1 > *first2){
+		++first2;
+	}
+	else{
+		*result = *first1;
+		++first1;
+		++first2;
+		++result;
+	}
+}
+	return result;
+} 
+```
+* 6.3.3. set_difference(),构造两个集合的差集s1-s2（表示只出现于s1，但不出现于s2)，以排序区间表示，返回一个迭代器**指向输出区间的尾端**
+```c++
+template<class InputIterator1, class InputIterator2, class OutputInterator>
+OutputIterator set_difference(InputIterator1 first1, InputIterator1 last1,
+						InputIterator2 first2, InputIterator2 last2,
+						OutputInterator result){
+while(first1 != last1 && first2 != last2){
+	if(*first1 < *first2){
+		*result = *first1;
+		++first1;
+		++first2;
+		++result;
+	}
+	else if(*first1 > *first2){
+		++first2;
+	}
+	else{
+		++first1;
+		++first2;
+	}
+}
+	return copy(first1, last1, result);
+} 
+```
+* 6.3.4. set_symmetric_difference()构造对称差集，即(s1-s2)$U $(s2-s1)，以排序区间表示，返回一个迭代器**指向输出区间的尾端**
+```c++
+template<class InputIterator1, class InputIterator2, class OutputInterator>
+OutputIterator set_symmetric_difference(InputIterator1 first1, InputIterator1 last1,
+						InputIterator2 first2, InputIterator2 last2,
+						OutputInterator result){
+while(first1 != last1 && first2 != last2){
+	if(*first1 < *first2){
+		*result = *first1;
+		++first1;
+		++result;
+	}
+	else if(*first1 > *first2){
+		*result = *first2;
+		++first2;
+		++result;
+	}
+	else{
+		++first1;
+		++first2;
+	}
+}
+	return copy(first2, last2, copy(first1, last1, result));
+} 
+```
+
