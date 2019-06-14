@@ -683,4 +683,14 @@ template <class Arg1, class Arg2>
 struct project2nd : public binary_function<Arg1, Arg2, Arg2>{
 	Arg2 operator()(const Arg1&, const Arg2& y) const {return y;}
 };
-
+```
+### 第八章：配接器（adapters）
+* 配接器也叫适配器，包括容器配接器（stack和queue），迭代器配接器，仿函数配接器三种
+* 迭代器配接器必须包含头文件<iterator> 
+> 1. insert iterator: 提供三个函数back_inserter()，front_inserter()，inserter()
+> 2. reverse iterator: 可以让迭代器反转实现，从尾端开始遍历
+> 3. iostream iterator: 将迭代器绑定到对应的iostream上使之具有其对应的功能例如 
+```c++ 
+<!-- 将outite绑定到cout，每次对outite指派一个元素，然后接一个" " -->
+ostream_iterator<int> outite(cout, " ");
+``` 
