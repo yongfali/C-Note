@@ -507,3 +507,146 @@ Function for_each(InputIterator first, InputIterator last, Function f){
 	return f;
 }
 ```
+* merge()：只应用于两个有序的区间进行合并，合并后仍然为有序区间，返回的是一个迭代器，指向最后结果序列的最后一个元素的下一个位置
+> ![](Images/merge_algorithm.png)
+* reverse()：将容器内的元素翻转
+* unique()：移除容器内相邻的重复元素，若对于无序数据，则只能保证相邻的相同元素被移除，因此可以先对容器排序
+* 
+
+### 第七章：仿函数（函数对象）
+* 主要作用是用作于模板算法的一个参数，从而使STL算法更加泛化，仿函数可以理解为模仿了函数的一些功能的对象
+> ![](Images/functional.png)
+* STL仿函数的分类，若依操作数的个数划分，可分为一元和二元仿函数，若以功能则分为算数运算，关系运算，逻辑运算。内置的仿函数都必须包含头文件```c++ <functional>```
+* 仿函数的存在可以使得算法的适用性和灵活性大大提升
+* 仿函数的型别主要用于表现函数参数型别和传回值型别
+
+**7.1 unary_function**
+* 用于呈现一元函数的参数型别和返回值型别
+```c++
+<!-- STl规定，每一个Adaptable Unary Function 都应继承此类别，继承后课自动获取参数类型或返回值类型 -->
+template <class Arg, class Result>
+struct unary_function{
+	typedef Arg argument_type;
+	typedef Result result_type;
+};
+```
+**7.2 binary_function**
+* 用于呈现二元函数的参数型别和返回值型别
+```c++
+<!-- STl规定，每一个Adaptable binary Function 都应继承此类别，继承后课自动获取参数类型或返回值类型 -->
+template <class Arg1, class Arg2, class Result>
+struct binary_function{
+	typedef Arg1 first_argument_type;
+	typedef Arg2 second_argument_type;
+	typedef Result result_type;
+};
+```
+* **以上这两个在C++98中适用较为频繁，c++11后使用较少**
+
+**7.3 算数类仿函数**
+* 包括以下6类
+> 1. 加法：plus<T>
+> 2. 减法：minus<T>
+> 3. 乘法：multiplies<T>
+> 4. 除法：divides<T>
+> 5. 求模：modulus<T>
+> 6. 否定：negate<T>
+```c++
+tempalte <class T>
+struct plus : public binary_function<T, T, T>{
+	T operator() (const T& x, const T& y) {return x + y; }
+};
+
+tempalte <class T>
+struct minus : public binary_function<T, T, T>{
+	T operator() (const T& x, const T& y) {return x - y; }
+};
+
+tempalte <class T>
+struct multiplies : public binary_function<T, T, T>{
+	T operator() (const T& x, const T& y) {return x * y; }
+};
+
+tempalte <class T>
+struct dicides : public binary_function<T, T, T>{
+	T operator() (const T& x, const T& y) {return x / y; }
+};
+
+tempalte <class T>
+struct modulus : public binary_function<T, T, T>{
+	T operator() (const T& x, const T& y) {return x % y; }
+};
+
+tempalte <class T>
+struct plus : public unary_function<T, T, T>{
+	T operator() (const T& x) {return -x ; }
+};
+```
+* 证同元素：所谓运算op的证同元素，意思就是数值A若与钙元素做op运算，会得到A自身。如加法的证同元素是0，乘法的证同元素是1
+
+**7.4 关系运算类仿函数**
+* 包括以下六类：
+> 1. 等于：equal_to<T>
+> 2. 不等于：not_equal_to<T>
+> 3. 大于：greater<T>
+> 4. 大于等于：greater_equal<T>
+> 5. 小于：less<T>
+> 6. 小于等于：less_equal<T>
+```c++
+tempalte <class T>
+struct equal_to : public binary_function<T, T, bool>{
+	T operator() (const T& x, const T& y) {return x == y; }
+};
+
+tempalte <class T>
+struct not_equal_to : public binary_function<T, T, bool>{
+	T operator() (const T& x, const T& y) {return x != y; }
+};
+
+tempalte <class T>
+struct greater : public binary_function<T, T, bool>{
+	T operator() (const T& x, const T& y) {return x > y; }
+};
+
+tempalte <class T>
+struct greater_equal : public binary_function<T, T, bool>{
+	T operator() (const T& x, const T& y) {return x >= y; }
+};
+
+tempalte <class T>
+struct less : public binary_function<T, T, bool>{
+	T operator() (const T& x, const T& y) {return x < y; }
+};
+
+tempalte <class T>
+struct less_equal : public binary_function<T, T, bool>{
+	T operator() (const T& x, const T& y) {return x <= y; }
+};
+```
+
+**7.5 逻辑运算类仿函数**
+* 包括以下三类：
+> 1. 逻辑与：logical_and<T>
+> 2. 逻辑或：logical_or<T>
+> 3. 逻辑非：logical_not<T>
+
+```c++
+tempalte <class T>
+struct logical_and : public binary_function<T, T, bool>{
+	T operator() (const T& x, const T& y) {return x && y; }
+};
+
+tempalte <class T>
+struct logical_or : public binary_function<T, T, bool>{
+	T operator() (const T& x, const T& y) {return x || y; }
+};
+
+tempalte <class T>
+struct logical_not : public unary_function<T, bool>{
+	T operator() (const T& x) {return !x; }
+};
+
+```
+
+**7.6 证同(identity)，选择(select)，投射(project)**
+* 
