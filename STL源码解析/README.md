@@ -385,16 +385,16 @@ class hash_set{
 * 
 * 算法的泛型化指的是使该算法能够适应于不同的数据结构或数据对象
 
-**6.1. 数值算法（numeric）**
+**6.1 数值算法（numeric）**
 * 必须包含头文件<numeric>，SGI实现于<stl_numeric.h>
 * 仿函数的头文件```c++ <functional>```
 
-**6.2.基本算法**
+**6.2 基本算法**
 * STL中的算法基本操作的是容器的**迭代器对象** 
 
-**6.3. set相关算法**
+**6.3 set相关算法**
 * STL一共提供了四种与set相关的算法，分别是并集（union），交集（intersection），差集（difference），对称差集（symmetric difference）
-* 6.3.1. set_union()，可构造两个集合的并集，以排序区间表示，返回一个迭代器**指向输出区间的尾端**
+* 6.3.1 set_union()，可构造两个集合的并集，以排序区间表示，返回一个迭代器**指向输出区间的尾端**
 ```c++
 template<class InputIterator1, class InputIterator2, class OutputInterator>
 OutputIterator set_union(InputIterator1 first1, InputIterator1 last1,
@@ -421,7 +421,7 @@ while(first1 != last1 && first2 != last2){
 } 
 ```
 > ![](Images/set_union.png)
-* 6.3.2. set_intersection()，可构造两个集合的交集，以排序区间表示，返回一个迭代器**指向输出区间的尾端**
+* 6.3.2 set_intersection()，可构造两个集合的交集，以排序区间表示，返回一个迭代器**指向输出区间的尾端**
 ```c++
 template<class InputIterator1, class InputIterator2, class OutputInterator>
 OutputIterator set_intersection(InputIterator1 first1, InputIterator1 last1,
@@ -444,7 +444,7 @@ while(first1 != last1 && first2 != last2){
 	return result;
 } 
 ```
-* 6.3.3. set_difference(),构造两个集合的差集s1-s2（表示只出现于s1，但不出现于s2)，以排序区间表示，返回一个迭代器**指向输出区间的尾端**
+* 6.3.3 set_difference(),构造两个集合的差集s1-s2（表示只出现于s1，但不出现于s2)，以排序区间表示，返回一个迭代器**指向输出区间的尾端**
 ```c++
 template<class InputIterator1, class InputIterator2, class OutputInterator>
 OutputIterator set_difference(InputIterator1 first1, InputIterator1 last1,
@@ -468,7 +468,7 @@ while(first1 != last1 && first2 != last2){
 	return copy(first1, last1, result);
 } 
 ```
-* 6.3.4. set_symmetric_difference()构造对称差集，即(s1-s2)$U $(s2-s1)，以排序区间表示，返回一个迭代器**指向输出区间的尾端**
+* 6.3.4 set_symmetric_difference()构造对称差集，即(s1-s2)$U $(s2-s1)，以排序区间表示，返回一个迭代器**指向输出区间的尾端**
 ```c++
 template<class InputIterator1, class InputIterator2, class OutputInterator>
 OutputIterator set_symmetric_difference(InputIterator1 first1, InputIterator1 last1,
@@ -494,3 +494,16 @@ while(first1 != last1 && first2 != last2){
 } 
 ```
 
+**6.4 其它算法** 
+
+**6.4.1 单纯的数据处理**
+* 如果某一算法传入仿函数对象或者是配接器，那么它将作用于迭代器的每一个元素身上，如下for_each()算法的泛化模板
+```c++
+tempalte <typename InputIterator, typename Function>
+Function for_each(InputIterator first, InputIterator last, Function f){
+	for(; first != last; ++first)
+		f(*first);
+
+	return f;
+}
+```
