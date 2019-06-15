@@ -1,5 +1,6 @@
 ## STL源码解析
 
+* **STL中容器实际是以class template完成，算法实际是以function template完成，仿函数实际是以operator()的class template，迭代器实际是一种operator++和operator*的泛化指针的 class template**
 ### 第一章：STL源码概述与版本介绍
 * 前闭后开区间[first, last)，表示从first开始，直到last-1，迭代器最后一个指的是最后一个元素的下一个位置，如下图所示
 > ![](Images/Iterator.png)
@@ -510,8 +511,12 @@ Function for_each(InputIterator first, InputIterator last, Function f){
 * merge()：只应用于两个有序的区间进行合并，合并后仍然为有序区间，返回的是一个迭代器，指向最后结果序列的最后一个元素的下一个位置
 > ![](Images/merge_algorithm.png)
 * reverse()：将容器内的元素翻转
-* unique()：移除容器内相邻的重复元素，若对于无序数据，则只能保证相邻的相同元素被移除，因此可以先对容器排序
-* 
+* unique()：移除容器内**相邻的重复元素**，若对于无序数据，则只能保证相邻的相同元素被移除，因此可以先对容器排序
+* next_permutation：下一个排列组合，STL提供的求排列组合算法的其中之一，该算法会取得[first,last)所标示序列的下一个排列组合，如果没有下一个则返回false，否则返回true,代码演示见**next_permutation_example.cpp**
+> ![next_permutation algorithm](Images/next_permutation.png)
+> 该图的描述：首先，从尾端开始往前寻找两个相邻的元素，令第一个元素为$*i$，第二个元素为$*ii$，且满足$*i < *ii$，找到这样一组相邻元素后，再从尾部开始往前检验，找到第一个大于$*i$的元素令其为$*j$，将i,j对调，再将ii之后的元素颠倒排列，这就是所求的下一个排列组合
+* **next_permutation（）在使用前需要对欲排列数组按升序排序，否则只能找出该序列之后的全排列数**
+* prev_permutation:前一个排列组合，可以枚举出一个降序排列的字符串的全排列，若是无序则也只能找出该序列之前的全排列组合
 
 ### 第七章：仿函数（函数对象）
 * 主要作用是用作于模板算法的一个参数，从而使STL算法更加泛化，仿函数可以理解为模仿了函数的一些功能的对象
@@ -685,12 +690,39 @@ struct project2nd : public binary_function<Arg1, Arg2, Arg2>{
 };
 ```
 ### 第八章：配接器（adapters）
-* 配接器也叫适配器，包括容器配接器（stack和queue），迭代器配接器，仿函数配接器三种
+* 配接器也叫适配器，包括容器配接器（stack和queue，实际上都是对容器deque的一些封装），迭代器配接器，仿函数配接器三种
 * 迭代器配接器必须包含头文件<iterator> 
-> 1. insert iterator: 提供三个函数back_inserter()，front_inserter()，inserter()
-> 2. reverse iterator: 可以让迭代器反转实现，从尾端开始遍历
+> 1. insert iterator: 提供三个函数back_inserter()，front_inserter()，inserter()，当客户端对insert iterator做赋值操作时，将其转换为对容器的插入操作，也就是内部在重载operator=时实际上调用的是push_back()或者push_front()或者insert()
+> 2. reverse iterator: 可以让迭代器反转实现，从尾端开始遍历，其内部运算符重载实现正好相反，因为元素实际位置并没有改变，而是逻辑位置变化而已，如下图所示
+![](Images/reverse_iterator.png)
 > 3. iostream iterator: 将迭代器绑定到对应的iostream上使之具有其对应的功能例如 
 ```c++ 
 <!-- 将outite绑定到cout，每次对outite指派一个元素，然后接一个" " -->
 ostream_iterator<int> outite(cout, " ");
 ``` 
+* 仿函数配接器是数量最庞大的一个集群，这些都位于头文件<functional>中，SGI STL将他们实际定义于<stl_function.h>中
+* 仿函数配接器与算法组合可以创造出各种可能的表达式，大大的提升算法的泛化性的和多样性
+```c++
+ // bind1st函数代表这么一个操作:  x op value 
+ bind1st(const Operation& op, const T& x)	
+
+ //bind2nd函数代表：value op x	
+ bind2nd(const Operation& op, const T& x)
+
+ //value 是被应用bind函数的对象，也就是仿函数作用的每一个元素对象
+ ```
+* **仿函数适配器，作为算法的参数时，实际其内部会先产生一个仿函数临时对象（也就是函数指针）供算法调用作用于算法操作的容器的每一个迭代器指向的数据，具体案例如下
+> ![](Images/functional_adapter.png)
+
+*仿函数配接器包括以下几个常见的的
+> 1. 对返回值进行逻辑否定：not1,not2，前者是对单目元素的否定，后者是两个元素运算的否定（如源码中 return !pred(x, y);）
+> 2. 对参数进行绑定 bind1st, bind2nd如上代码解释
+> 3. 用于函数合成 compose1,compose2
+> compose1可以看做两个unary functions f() and g(), 改配接器用来产生一个h(),使得h(x) = f(g(x))
+> compose2,已知一个binary function f() ,两个unary functions g1() and g2(), 改配接器用来产生一个h(),使得h(x) = f(g1(x), g2(x))
+
+* **用于函数指针：ptr_fun** 
+* 将一个普通函数适配成仿函数供算法使用
+* **用于成员函数指针：mem_fun, mem_fun_ref**
+* 将成员函数当做仿函数来使用，搭配各种算法，可以参见mem_fun_example.cpp用法  
+
