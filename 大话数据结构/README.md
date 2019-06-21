@@ -23,4 +23,5 @@
 ![](Images/tree_represent.png)
 
 > 3. 孩子兄弟表示法：设置两个指针，分别指向该节点的第一个孩子和此节点的右兄弟 
+* 完全二叉树的性质和判定见演示代码**binary_tree_confirm.cpp**
 * 
